@@ -72,6 +72,12 @@
 
 
 # **Task 12**
+
+## WRRC:
+![20220131_221335](https://user-images.githubusercontent.com/97676785/151866308-9077c435-b343-4b8d-96c1-226be1696e6c.jpg)
+
+
+
 ## Documentation:
 
 I got my data from a 3rd party API and installed *axios* to help me connect to it.
