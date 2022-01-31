@@ -1,3 +1,6 @@
+# **Task 11**
+
+
 # Movies-Library
 
 
@@ -65,4 +68,44 @@
     -the status number
     -a message "Sorry, something went wrong"
 
+
+
+
+# **Task 12**
+## Documentation:
+
+I got my data from a 3rd party API and installed *axios* to help me connect to it.
+also created a *.env* file to help me hide certain info from users.
+
+
+
+
+New end points have been added and they are:
+
+- trending page: has information about the trending movies, these information are:
+       1. id
+       2. title
+       3. release_date
+       4. poster_path
+       5. overview
+
+
+- search page: has information about the trending movies, these information are:
+       1. id
+       2. title
+       3. release_date
+       4. poster_path
+       5. overview
+
+
+- genre page: has information about the trending movies, these information are:
+       1. id
+       2. name
+
+
+- providers page: has information about the trending movies, these information are:
+       1. iso_3166_1
+       2. english_name
+       3. native_name
+       
 
