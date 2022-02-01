@@ -109,3 +109,17 @@ New end points have been added and they are:
        3. native_name
        
 
+
+
+# **Task 13**
+
+
+-the pg that i installed is almost like a library that helps me connect to the server, but we need to create a *client* and connect it to our database
+
+-now that we are taking data in, we need to use the http method *post*
+and to read the new info we use the http method *get*
+
+-new end points:
+1. /addMovie : with post method
+2. /getMovies : with post method
+
