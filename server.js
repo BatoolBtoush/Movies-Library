@@ -6,13 +6,18 @@ require ('dotenv').config();
 const express = require ('express');
 const cors = require ('cors');
 const axios = require ('axios');
+// requiring pg
+const pg = require ('pg');
 
+
+// Generate a client with a fixed database url
+const client = new pg.Client(process.env.DATABASE_URL);
 
 
 // Calling express and cors
 const app = express();
 app.use(cors());
-
+app.use(express.json());
 
 
 // Require the data.json for the movie app
@@ -27,6 +32,10 @@ app.get('/trending',trendingHandler);
 app.get('/search',searchHandler);
 app.get('/genre',genreHandler);
 app.get('/providers',providersHandler);
+/// database request endpoints
+app.post('/addMovie',addMovieHandler);
+app.get('/getMovies',getMoviesHandler);
+// errors
 app.get('*',notFoundHandler);
 app.use(serverErrorHandler);
 
@@ -179,13 +188,41 @@ function providersHandler(req,res){
 
 
 
+function addMovieHandler(req,res){
+    const mov = req.body;
+   // console.log(mov);
+  let sql = `INSERT INTO batFavMovies(title,release_date,poster_path,overview) VALUES ($1,$2,$3,$4) RETURNING*;`
+  let values = [mov.title,mov.release_date,mov.poster_path,mov.overview];
+  client.query(sql,values).then(data =>{
+      res.status(200).json(data.rows);
+  }).catch(error =>{
+      serverErrorHandler(error,req,res)
+  });
+}
+
+
+
+
+function getMoviesHandler(req,res){
+    let sql = `SELECT * FROM batFavMovies;`;
+    client.query(sql).then(data=>{
+       res.status(200).json(data.rows);
+    }).catch(error=>{
+        errorHandler(error,req,res)
+    });
+}
+
+
+
+
+
 function notFoundHandler(req,res){
     return res.status(404).send('page not found error')
 }
 
 
 
-function serverErrorHandler(rerror,eq,res){
+function serverErrorHandler(error,req,res){
     const servererror = {
             status: 500,
             responseText: "Sorry, something went wrong"            
@@ -199,7 +236,11 @@ function serverErrorHandler(rerror,eq,res){
 
 /// Port listening
 /// localhost port:4020
-app.listen(4020, ()=>{
 
-    console.log('listening to port 4020')
+// Making sure that my server doesn't run unless the database from the client is connected successfully
+client.connect().then(() =>{
+    app.listen(4020, ()=>{
+
+        console.log('listening to port 4020')
+    })
 })
