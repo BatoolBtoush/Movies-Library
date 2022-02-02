@@ -129,3 +129,21 @@ and to read the new info we use the http method *get*
 1. /addMovie : with post method
 2. /getMovies : with post method
 
+
+
+# **Task 14**
+
+- created 3 new end points that allow me to update, delete, retreive certain data in my database:
+
+1. /UPDATE/id : this point allows the user to update certain values inside any objects they want but they have to provide a paramtere which is in this case: *ID* 
+by putting the id of the object they want to update in the route like this:
+`req.params.id`
+
+2. /DELETE/id : this point allows the user to delete certain values inside any objects they want but they have to provide a paramtere which is in this case: *ID* 
+by putting the id of the object they want to delete in the route like this:
+`req.params.id`
+and the status for this request is 204; meaning it's successfull but it didn't return anything.
+
+3. getMovie/id : this point allows the user to retrieve any object inside the database they want but they have to provide a paramtere which is in this case: *ID* 
+by putting the id of the movie they want to retrieve in the route like this:
+`req.params.id`

@@ -9,7 +9,7 @@ const axios = require ('axios');
 // requiring pg
 const pg = require ('pg');
 
-
+// port
 const PORT = process.env.PORT;
 
 
@@ -23,22 +23,27 @@ app.use(cors());
 app.use(express.json());
 
 
-// Require the data.json for the movie app
+// Require the data.json for the movie app for task 11:
 const movieAppData = require('./Movie Data/data.json');
 
 
 
-/// Endpoints for task 11 and 12:
+/// Endpoints for task 11, 12, 13 and 14:
 app.get('/',homeHandler);
 app.get('/favorite',favHandler);
 app.get('/trending',trendingHandler);
 app.get('/search',searchHandler);
 app.get('/genre',genreHandler);
 app.get('/providers',providersHandler);
-/// database request endpoints
+/// database request endpoints (post and get)
 app.post('/addMovie',addMovieHandler);
 app.get('/getMovies',getMoviesHandler);
-// errors
+/// database request endpoints (update and delete)
+app.put('/UPDATE/:id',updateHandler);
+app.delete('/DELETE/:id',deleteHandler);
+// get endpoint to retrieve certain movies from the database
+app.get('/getMovie/:id',getMovieHandler);
+/// errors
 app.get('*',notFoundHandler);
 app.use(serverErrorHandler);
 
@@ -212,7 +217,48 @@ function getMoviesHandler(req,res){
     client.query(sql).then(data=>{
        res.status(200).json(data.rows);
     }).catch(error=>{
-        errorHandler(error,req,res)
+        serverErrorHandler(error,req,res)
+    });
+}
+
+
+
+
+function updateHandler (req,res) {
+    const id = req.params.id;
+    const mov = req.body;
+    const sql = `UPDATE batFavMovies SET title =$1, release_date =$2, poster_path =$3 ,overview=$4 WHERE id=$5 RETURNING *;`; 
+    let values = [mov.title,mov.release_date,mov.poster_path,mov.overview,id];
+    client.query(sql,values).then(data =>{
+        res.status(200).json(data.rows);
+    }).catch(error =>{
+        serverErrorHandler(error,req,res)
+    });
+
+}
+
+
+
+function deleteHandler(req,res){
+    const id = req.params.id;
+    const sql = `DELETE FROM batFavMovies WHERE id=${id};`
+    client.query(sql).then(()=>{
+        res.status(204).json({});
+    }).catch(error=>{
+        serverErrorHandler(error,req,res)
+    });
+}
+
+
+
+
+function getMovieHandler(req,res){
+    const id = req.params.id;
+    const sql = `SELECT * FROM batFavMovies WHERE id=${id};`
+    client.query(sql).then(data=>{
+        res.status(200).json(data.rows);
+    }).catch(error=>{
+        serverErrorHandler(error,req,res)
     });
 }
 
@@ -223,6 +269,7 @@ function getMoviesHandler(req,res){
 function notFoundHandler(req,res){
     return res.status(404).send('page not found error')
 }
+
 
 
 
@@ -240,7 +287,6 @@ function serverErrorHandler(error,req,res){
 
 /// Port listening
 /// localhost port:4020
-
 // Making sure that my server doesn't run unless the database from the client is connected successfully
 client.connect().then(() =>{
     app.listen(PORT, ()=>{
