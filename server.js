@@ -1,5 +1,5 @@
 'use stricit';
-
+ 
 
 // Requiring express, cors, axios and .env
 require ('dotenv').config();
@@ -8,6 +8,9 @@ const cors = require ('cors');
 const axios = require ('axios');
 // requiring pg
 const pg = require ('pg');
+
+
+const PORT = process.env.PORT;
 
 
 // Generate a client with a fixed database url
@@ -193,6 +196,7 @@ function addMovieHandler(req,res){
    // console.log(mov);
   let sql = `INSERT INTO batFavMovies(title,release_date,poster_path,overview) VALUES ($1,$2,$3,$4) RETURNING*;`
   let values = [mov.title,mov.release_date,mov.poster_path,mov.overview];
+  //console.log(values);
   client.query(sql,values).then(data =>{
       res.status(200).json(data.rows);
   }).catch(error =>{
@@ -239,8 +243,8 @@ function serverErrorHandler(error,req,res){
 
 // Making sure that my server doesn't run unless the database from the client is connected successfully
 client.connect().then(() =>{
-    app.listen(4020, ()=>{
+    app.listen(PORT, ()=>{
 
-        console.log('listening to port 4020')
+        console.log(`listening to port ${PORT}`)
     })
 })
