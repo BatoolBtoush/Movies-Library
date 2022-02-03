@@ -14,8 +14,10 @@ const PORT = process.env.PORT;
 
 
 // Generate a client with a fixed database url
-const client = new pg.Client(process.env.DATABASE_URL);
-
+const client = new pg.Client({
+    connectionString: process.env.DATABASE_URL,
+    ssl: { rejectUnauthorized: false }
+})
 
 // Calling express and cors
 const app = express();
